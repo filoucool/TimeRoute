@@ -63,6 +63,7 @@ flutter:
     - assets/TimeRoute3.svg
     - assets/TimeRoute4.svg
     - assets/TimeRoute5.svg
+    - assets/TimeRoute6.svg
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
