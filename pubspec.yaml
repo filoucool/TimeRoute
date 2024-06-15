@@ -57,7 +57,12 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  assets:
+    - assets/TimeRoute1.svg
+    - assets/TimeRoute2.svg
+    - assets/TimeRoute3.svg
+    - assets/TimeRoute4.svg
+    - assets/TimeRoute5.svg
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
