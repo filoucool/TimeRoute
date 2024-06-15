@@ -94,6 +94,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                     child: Text('Close', style: TextStyle(color: Colors.red)),
                   ),
+                  TextButton(
+                    onPressed: () {
+                      _toggleModal();
+                    },
+                    child: Text('Generate', style: TextStyle(color: Colors.green)),
+                  ),
                 ],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(15)),
