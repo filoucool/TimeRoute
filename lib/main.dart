@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'env.dart'; // Import the Env class
-import 'time_counter.dart'; // Import the TimeCounter widget
+import 'env.dart';
+import 'time_counter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -89,15 +90,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      _toggleModal(); // Ensure the modal is toggled off
+                      _toggleModal();
                     },
                     child: Text('Close', style: TextStyle(color: Colors.red)),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      _toggleModal(); // Ensure the modal is toggled off
-                    },
-                    child: Text('Generate', style: TextStyle(color: Colors.green)),
                   ),
                 ],
                 shape: RoundedRectangleBorder(
@@ -127,22 +122,35 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: GoogleMap(
-                onMapCreated: _onMapCreated,
-                initialCameraPosition: CameraPosition(
-                  target: _center,
-                  zoom: 11.0,
+      body: Stack(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: GoogleMap(
+                  onMapCreated: _onMapCreated,
+                  initialCameraPosition: CameraPosition(
+                    target: _center,
+                    zoom: 11.0,
+                  ),
+                  zoomControlsEnabled: false,
                 ),
-                zoomControlsEnabled: false, // Disable the zoom controls
+              ),
+            ],
+          ),
+          Positioned(
+            top: 16,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: SvgPicture.asset(
+                'assets/TimeRoute1.svg',
+                height: 150,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _toggleModal,
