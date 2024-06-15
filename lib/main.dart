@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   target: _center,
                   zoom: 11.0,
                 ),
-                zoomControlsEnabled: false, // Disable the zoom controls
+                zoomControlsEnabled: false,
               ),
             ),
           ],
