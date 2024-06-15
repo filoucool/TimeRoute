@@ -146,13 +146,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
           Positioned(
-            top: 16,
+            top: -40,
             left: 0,
             right: 0,
             child: Center(
               child: SvgPicture.asset(
                 'assets/TimeRoute1.svg',
-                height: 150,
+                height: 175,
               ),
             ),
           ),
