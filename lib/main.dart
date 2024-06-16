@@ -80,6 +80,52 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+    mapController.setMapStyle('''
+    [
+      {
+        "featureType": "poi",
+        "elementType": "all",
+        "stylers": [
+          { "visibility": "off" }
+        ]
+      },
+      {
+        "featureType": "transit.station.airport",
+        "elementType": "all",
+        "stylers": [
+          { "visibility": "off" }
+        ]
+      },
+      {
+        "featureType": "transit.station.rail",
+        "elementType": "all",
+        "stylers": [
+          { "visibility": "off" }
+        ]
+      },
+      {
+        "featureType": "landscape.natural.terrain",
+        "elementType": "all",
+        "stylers": [
+          { "visibility": "on" }
+        ]
+      },
+      {
+        "featureType": "landscape",
+        "elementType": "labels",
+        "stylers": [
+          { "visibility": "off" }
+        ]
+      },
+      {
+        "featureType": "landscape.natural.landcover",
+        "elementType": "all",
+        "stylers": [
+          { "visibility": "on" }
+        ]
+      }
+    ]
+    ''');
   }
 
   @override
@@ -91,15 +137,28 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Expanded(
-                child: GoogleMap(
-                  onMapCreated: _onMapCreated,
-                  initialCameraPosition: CameraPosition(
-                    target: _center,
-                    zoom: 11.0,
-                  ),
-                  zoomControlsEnabled: false,
-                  scrollGesturesEnabled: !_isModalVisible,
-                  zoomGesturesEnabled: !_isModalVisible,
+                child: Stack(
+                  children: [
+                    GoogleMap(
+                      onMapCreated: _onMapCreated,
+                      initialCameraPosition: CameraPosition(
+                        target: _center,
+                        zoom: 11.0,
+                      ),
+                      zoomControlsEnabled: false,
+                      scrollGesturesEnabled: !_isModalVisible,
+                      zoomGesturesEnabled: !_isModalVisible,
+                    ),
+                    if (_isModalVisible)
+                      Positioned.fill(
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.basic,
+                          child: Container(
+                            color: Colors.transparent,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],
