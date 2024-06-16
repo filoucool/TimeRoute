@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'env.dart';
 import 'time_counter.dart';
-import 'modal.dart';
+import 'stepper_modal_dialog.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,10 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return ModalDialog(
-            currentAddressController: _currentAddressController,
-            destinationAddressController: _destinationAddressController,
-            manualInputController: _manualInputController,
+          return StepperModalDialog(
             onClose: () {
               setState(() {
                 _isModalVisible = false;
