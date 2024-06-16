@@ -98,6 +98,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     zoom: 11.0,
                   ),
                   zoomControlsEnabled: false,
+                  scrollGesturesEnabled: !_isModalVisible,
+                  zoomGesturesEnabled: !_isModalVisible,
                 ),
               ),
             ],
@@ -113,6 +115,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
+          if (_isModalVisible)
+            Positioned.fill(
+              child: ModalBarrier(
+                color: Colors.black54,
+                dismissible: false,
+              ),
+            ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
