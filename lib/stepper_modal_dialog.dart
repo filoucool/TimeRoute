@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StepperModalDialog extends StatefulWidget {
   final VoidCallback onClose;
@@ -17,6 +18,28 @@ class _StepperModalDialogState extends State<StepperModalDialog> {
   final PageController _pageController = PageController();
   final List<TextEditingController> _controllers = List.generate(5, (_) => TextEditingController());
   int _currentStep = 0;
+  bool _showSettings = false;
+  List<bool> _settings = List.generate(5, (_) => false);
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _settings = List.generate(5, (index) => prefs.getBool('setting_$index') ?? false);
+    });
+  }
+
+  Future<void> _saveSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    for (int i = 0; i < _settings.length; i++) {
+      await prefs.setBool('setting_$i', _settings[i]);
+    }
+  }
 
   void _nextStep() {
     if (_currentStep < 4) {
@@ -36,20 +59,43 @@ class _StepperModalDialogState extends State<StepperModalDialog> {
     }
   }
 
+  void _toggleSettings() {
+    setState(() {
+      _showSettings = !_showSettings;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       content: Container(
         width: MediaQuery.of(context).size.width * 0.2,
-        height: MediaQuery.of(context).size.height * 0.4,
+        height: MediaQuery.of(context).size.height * 0.5,
         child: Column(
           children: [
             // Title Row
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.directions_walk),
-                SizedBox(width: 10),
-                Text('Step ${_currentStep + 1}', style: TextStyle(fontWeight: FontWeight.bold)),
+                Row(
+                  children: [
+                    Icon(Icons.directions_walk),
+                    SizedBox(width: 10),
+                    Text('Step ${_currentStep + 1}', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.settings),
+                      onPressed: _toggleSettings,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: widget.onClose,
+                    ),
+                  ],
+                ),
               ],
             ),
             SizedBox(height: 20),
@@ -59,13 +105,15 @@ class _StepperModalDialogState extends State<StepperModalDialog> {
               child: PageView(
                 controller: _pageController,
                 physics: NeverScrollableScrollPhysics(),
-                children: [
-                  _buildStep1(),
-                  _buildStep2(),
-                  _buildStep3(),
-                  _buildStep4(),
-                  _buildStep5(),
-                ],
+                children: _showSettings
+                    ? [_buildSettingsPage()]
+                    : [
+                        _buildStep1(),
+                        _buildStep2(),
+                        _buildStep3(),
+                        _buildStep4(),
+                        _buildStep5(),
+                      ],
               ),
             ),
             SizedBox(height: 20),
@@ -77,7 +125,7 @@ class _StepperModalDialogState extends State<StepperModalDialog> {
                 Expanded(
                   child: Align(
                     alignment: Alignment.center,
-                    child: _currentStep > 0
+                    child: _currentStep > 0 && !_showSettings
                         ? ElevatedButton(
                             onPressed: _previousStep,
                             child: Text('Previous'),
@@ -89,7 +137,7 @@ class _StepperModalDialogState extends State<StepperModalDialog> {
                 Expanded(
                   child: Align(
                     alignment: Alignment.center,
-                    child: _currentStep == 4
+                    child: _currentStep == 4 && !_showSettings
                         ? ElevatedButton(
                             onPressed: widget.onGenerate,
                             child: Text('Generate'),
@@ -101,7 +149,7 @@ class _StepperModalDialogState extends State<StepperModalDialog> {
                 Expanded(
                   child: Align(
                     alignment: Alignment.center,
-                    child: _currentStep < 4
+                    child: _currentStep < 4 && !_showSettings
                         ? ElevatedButton(
                             onPressed: _nextStep,
                             child: Text('Next'),
@@ -111,14 +159,6 @@ class _StepperModalDialogState extends State<StepperModalDialog> {
                 ),
               ],
             ),
-            SizedBox(height: 10),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: TextButton(
-                onPressed: widget.onClose,
-                child: Text('Close', style: TextStyle(color: Colors.red)),
-              ),
-            ),
           ],
         ),
       ),
@@ -126,6 +166,55 @@ class _StepperModalDialogState extends State<StepperModalDialog> {
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
       backgroundColor: Colors.white,
+    );
+  }
+
+  Widget _buildSettingsPage() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Settings', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        ...List.generate(
+          _settings.length,
+          (index) => CheckboxListTile(
+            title: Text('Setting ${index + 1}'),
+            value: _settings[index],
+            onChanged: (value) {
+              setState(() {
+                _settings[index] = value!;
+              });
+            },
+          ),
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: Align(
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _toggleSettings();
+                    _loadSettings();
+                  },
+                  child: Text('Cancel'),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _toggleSettings();
+                    _saveSettings();
+                  },
+                  child: Text('Save'),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
