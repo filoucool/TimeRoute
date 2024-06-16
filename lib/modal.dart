@@ -19,7 +19,7 @@ class ModalDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Modal Dialog', style: TextStyle(fontWeight: FontWeight.bold)),
+      title: Text('Create new route', style: TextStyle(fontWeight: FontWeight.bold)),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
